@@ -1,0 +1,41 @@
+df.drop(['Average weight (kg)', 'Max weight (kg)', 'Min weight (kg)', 'Average heart rate (bpm)', 'Min heart rate (bpm)', 'Max heart rate (bpm)'], inplace=True, axis=1)
+df["workoutMonth"] = df.index.month_name()
+df["workoutWeekDay"] = df.index.day_name()
+df["workoutYear"] = df.index.year
+import plotly.express as px
+import plotly.graph_objects as go
+temp2 = df.workoutWeekDay.value_counts()
+months = ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+month_value = tuple(temp2[i] for i in months)
+fig = px.bar(temp2, 
+             x=months, 
+             y=month_value, 
+             color=month_value, 
+             text=month_value,
+             color_continuous_scale='Rainbow',
+             labels={'color':''}
+            )
+fig.update_layout(
+    title = "Count of Workout in Each Week Day from 2018 to present",
+    xaxis_title='Week Day',
+    yaxis_title='Number of Workouts',
+    xaxis_tickangle=-40,
+    yaxis={'visible': False, 'showticklabels': False},
+    font=dict(size=15)
+)
+fig = px.line(df["Move Minutes count"])
+fig.update_layout(
+    title = "Move Minutes Line Chart",
+    yaxis_title='Move Minutes',
+    xaxis_tickangle=-40,
+    font=dict(size=15),
+    showlegend=False
+)
+fig = px.line(df["Step count"].rolling(window=7).mean())
+fig.update_layout(
+    title = "Step Count Line Chart",
+    yaxis_title='Steps',
+    xaxis_tickangle=-40,
+    font=dict(size=15),
+    showlegend=False
+)
